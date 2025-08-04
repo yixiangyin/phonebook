@@ -16,14 +16,21 @@ mongoose
   })
 
 const personSchema = new mongoose.Schema({
-  name: { type: String, minLength: 3 },
+  name: {
+    type: String,
+    minLength: 3,
+    unique: true,
+    required: true,
+  },
   number: {
     type: String,
+    required: true,
     validate: {
       validator: (v) => {
         return /^\d{2,3}-\d+$/.test(v)
       },
-      message: (props) => `${props.value} is not a valid phone number!`,
+      message: () =>
+        'The phone number must be at least 8 characters long and must contain a hyphen after the second or third digit (e.g., 040-6655678).',
     },
     minLength: 8,
   },
