@@ -59,12 +59,13 @@ const App = () => {
           notifyWith(`Changed ${person.name}'s number`);
           clearForm();
         })
-        .catch(() => {
-          notifyWith(
-            `Information of ${person.name} has already been removed from server`,
-            true
-          );
-          setPersons(persons.filter((p) => p.name !== person.name));
+        .catch((error) => {
+          notifyWith(`${error.response.data.error}`, true);
+          // notifyWith(
+          //   `Information of ${person.name} has already been removed from server`,
+          //   true
+          // );
+          // setPersons(persons.filter((p) => p.name !== person.name));
         });
     }
   };
