@@ -50,12 +50,27 @@ app.get("/info", (req, res) => {
         <p>${time}</p>`);
 });
 
-app.get("/api/persons/:id", (req, res) => {
-  Person.findById(req.params.id).then((person) => {
-    res.json(person);
-  });
+app.get("/api/persons/:id", (req, res, next) => {
+  Person.findById(req.params.id)
+    .then((person) => {
+      res.json(person);
+    })
+    .catch((error) => next(error));
 });
-
+app.put("/api/persons/:id", (req, res, next) => {
+  Person.findById(req.params.id)
+    .then((person) => {
+      if (!person) {
+        return res.status(404).end();
+      }
+      person.name = req.body.name;
+      person.number = req.body.number;
+      return person.save().then((updatePerson) => {
+        res.json(updatePerson);
+      });
+    })
+    .catch((error) => next(error));
+});
 app.delete("/api/persons/:id", (req, res, next) => {
   const id = req.params.id;
   Person.findByIdAndDelete(id)
